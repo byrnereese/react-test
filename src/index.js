@@ -47,6 +47,7 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
+                location: null,
                 squares: Array(9).fill(null),
             }],
             xIsNext: true,
@@ -60,9 +61,12 @@ class Game extends React.Component {
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
+        let loc = getLocationText(i);
+        console.log("User clicked: " + loc);
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
             history: history.concat([{
+                location: loc,
                 squares: squares,
             }]),
             xIsNext: !this.state.xIsNext,
@@ -79,8 +83,8 @@ class Game extends React.Component {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
-
         const moves = history.map((step,move) => {
+            const location = move ? (move % 2 ? "X plays " : "O plays ") + history[move].location : '';
             const desc = move ? 
                 'Go to move #' + move :
                 'Go to game start';
@@ -88,6 +92,7 @@ class Game extends React.Component {
                     <li key={move}>
 
                     <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    &nbsp;<span>{location}</span>
                 </li>
             );
         });
@@ -140,4 +145,18 @@ function calculateWinner(squares) {
         }
     }
     return null;
+}
+
+function getLocationText(step) {
+    switch(step) {
+    case 0: return "top left"; break;
+    case 1: return "top middle"; break;
+    case 2: return "top right"; break;
+    case 3: return "middle left"; break;
+    case 4: return "center"; break;
+    case 5: return "middle right"; break;
+    case 6: return "bottom left"; break;
+    case 7: return "bottom middle"; break;
+    case 8: return "bottom right"; break;
+    }
 }
