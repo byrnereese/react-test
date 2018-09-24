@@ -12,32 +12,30 @@ function Square(props) {
 
 class Board extends React.Component {
     renderSquare(i) {
+        let skey = i;
         return (
            <Square 
+            key={skey}
             value={this.props.squares[i]} 
                 onClick={() => this.props.onClick(i)}
                 />
         );
     }
+    createBoard = () => {
+        let rows = [];
+        for (let i=0;i<3;i++) {
+            let cols = [];
+            for (let j=0;j<3;j++) {
+                let skey = (i * 3) + j;
+                cols.push(this.renderSquare(skey));
+            }
+            rows.push(<div key={i} className="board-row">{cols}</div>);
+        }
+        return rows;
+    }
     render() {
         return (
-      <div>
-        <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-        </div>
-      </div>
+                <div>{this.createBoard()}</div>
         );
     }
 }
@@ -88,7 +86,7 @@ class Game extends React.Component {
             const desc = move ? 
                 'Go to move #' + move :
                 'Go to game start';
-            const cn = this.state.stepNumber == move ? "selected" : "";
+            const cn = this.state.stepNumber === move ? "selected" : "";
             return (
                     <li key={move} className={cn}>
 
@@ -149,15 +147,18 @@ function calculateWinner(squares) {
 }
 
 function getLocationText(step) {
+    let txt;
     switch(step) {
-    case 0: return "top left"; break;
-    case 1: return "top middle"; break;
-    case 2: return "top right"; break;
-    case 3: return "middle left"; break;
-    case 4: return "center"; break;
-    case 5: return "middle right"; break;
-    case 6: return "bottom left"; break;
-    case 7: return "bottom middle"; break;
-    case 8: return "bottom right"; break;
+    case 0: txt = "top left"; break
+    case 1: txt = "top middle"; break
+    case 2: txt = "top right"; break;
+    case 3: txt = "middle left"; break;
+    case 4: txt = "center"; break;
+    case 5: txt = "middle right"; break;
+    case 6: txt = "bottom left"; break;
+    case 7: txt = "bottom middle"; break;
+    case 8: txt = "bottom right"; break;
+    default: txt = "";
     }
+    return txt;
 }
